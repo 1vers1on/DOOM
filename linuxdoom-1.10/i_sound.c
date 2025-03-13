@@ -37,6 +37,8 @@ rcsid[] = "$Id: i_unix.c,v 1.5 1997/02/03 22:45:10 b1 Exp $";
 #include <sys/filio.h>
 #endif
 
+#include <errno.h>
+
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/ioctl.h>
@@ -153,25 +155,15 @@ int*		channelrightvol_lookup[NUM_CHANNELS];
 
 
 
-//
-// Safe ioctl, convenience.
-//
-void
-myioctl
-( int	fd,
-  int	command,
-  int*	arg )
-{   
-    int		rc;
-    extern int	errno;
-    
-    rc = ioctl(fd, command, arg);  
-    if (rc < 0)
-    {
-	fprintf(stderr, "ioctl(dsp,%d,arg) failed\n", command);
-	fprintf(stderr, "errno=%d\n", errno);
-	exit(-1);
-    }
+void myioctl(int fd, int command, int* arg) {
+  int rc;
+
+  rc = ioctl(fd, command, arg);  
+  if (rc < 0) {
+      fprintf(stderr, "ioctl(dsp,%d,arg) failed\n", command);
+      fprintf(stderr, "errno=%d\n", errno);
+      exit(-1);
+  }
 }
 
 
